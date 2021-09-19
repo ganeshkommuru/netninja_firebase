@@ -1,5 +1,6 @@
 import 'package:brew_crew/models/brew.dart';
 import 'package:brew_crew/screens/home/brew_list.dart';
+import 'package:brew_crew/screens/home/settings_form.dart';
 import 'package:brew_crew/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class Home extends StatelessWidget {
           builder: (context) {
             return Container(
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: Text('bottom sheet'),
+              child: SettingsForm(),
             );
           });
     }
@@ -24,7 +25,7 @@ class Home extends StatelessWidget {
     final AuthService _auth = AuthService();
     return StreamProvider<List<Brew>?>.value(
       //initialData: QuerySnapshot(),
-      initialData: null,
+      initialData: [],
       value: DatabaseService(uid: '').brew,
       child: Scaffold(
         backgroundColor: Colors.brown[50],
