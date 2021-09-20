@@ -1,8 +1,9 @@
+import 'dart:ffi';
+
 import 'package:brew_crew/models/brew.dart';
 import 'package:brew_crew/screens/home/brew_list.dart';
 import 'package:brew_crew/screens/home/settings_form.dart';
 import 'package:brew_crew/services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:brew_crew/services/database.dart';
@@ -38,20 +39,37 @@ class Home extends StatelessWidget {
               onPressed: () async {
                 await _auth.signOut();
               },
-              icon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person,
+              ),
               label: Text('Log out'),
+              // style: ButtonStyle(
+              //     backgroundColor:
+              //         MaterialStateProperty.all<Color>(Colors.white)),
             ),
             TextButton.icon(
+              // style: ButtonStyle(
+              //     backgroundColor:
+              //         MaterialStateProperty.all<Color>(Colors.white)),
               onPressed: () {
                 _showSettingsPanel();
               },
-              icon: Icon(Icons.settings),
+              icon: Icon(
+                Icons.settings,
+              ),
               label: Text('settings'),
               autofocus: true,
             ),
           ],
         ),
-        body: BrewList(),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/coffee_bg.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: BrewList()),
       ),
     );
   }

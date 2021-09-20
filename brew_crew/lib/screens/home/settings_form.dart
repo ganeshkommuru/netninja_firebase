@@ -16,9 +16,9 @@ class _SettingsFormState extends State<SettingsForm> {
   final List<String> sugars = ['0', '1', '2', '3', '4'];
 
   // form values
-  late String _currentName;
-  late String _currentSugars;
-  late int _currentStrength;
+  late String? _currentName = null;
+  late String? _currentSugars = null;
+  late int? _currentStrength = null;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,9 @@ class _SettingsFormState extends State<SettingsForm> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData? userData = snapshot.data;
-            _currentName = userData!.name;
-            _currentStrength = userData.strength;
-            _currentSugars = userData.sugars;
+            // _currentName = userData!.name;
+            // _currentStrength = userData.strength;
+            // _currentSugars = userData.sugars;
             return Form(
               key: _formKey,
               child: Column(
@@ -42,7 +42,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                   SizedBox(height: 20.0),
                   TextFormField(
-                    initialValue: userData.name,
+                    initialValue: userData!.name,
                     decoration: textInputDecoration,
                     validator: (val) =>
                         val!.isEmpty ? 'Please enter a name' : null,
@@ -50,7 +50,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                   SizedBox(height: 10.0),
                   DropdownButtonFormField(
-                    value: _currentSugars,
+                    value: _currentSugars ?? userData.sugars,
                     decoration: textInputDecoration,
                     items: sugars.map((sugar) {
                       return DropdownMenuItem(
@@ -63,14 +63,15 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                   SizedBox(height: 10.0),
                   Slider(
-                    value: (_currentStrength).toDouble(),
-                    activeColor: Colors.brown[(_currentStrength).toInt()],
+                    value: (_currentStrength ?? userData.strength).toDouble(),
+                    activeColor: Colors
+                        .brown[(_currentStrength ?? userData.strength).toInt()],
                     min: 100,
                     max: 900,
                     divisions: 8,
                     onChanged: (val) {
                       setState(() {
-                        _currentStrength = val.toInt();
+                        _currentStrength = val.round();
                       });
                     },
                   ),
@@ -84,10 +85,9 @@ class _SettingsFormState extends State<SettingsForm> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           await DatabaseService(uid: user.uid).updateUserData(
-                            _currentSugars,
-                            _currentName,
-                            _currentStrength,
-                          );
+                              _currentSugars ?? snapshot.data!.sugars,
+                              _currentName ?? snapshot.data!.name,
+                              _currentStrength ?? snapshot.data!.strength);
                           Navigator.pop(context);
                         }
                       }),
